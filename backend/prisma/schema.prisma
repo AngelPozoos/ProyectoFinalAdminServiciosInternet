@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://user_tienda:canelo2012@localhost:3306/ecommerce_db"
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  nombre    String?
+  password  String
+  rol       Rol      @default(CLIENTE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pedidos   Pedido[]
+
+  @@map("User")
+}
+
+model Producto {
+  id          String   @id @default(uuid())
+  nombre      String
+  descripcion String
+  precio      Decimal
+  sku         String   @unique
+  stock       Int
+  categoria   String
+  imagenes    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  itemsPedido ItemPedido[]
+
+  @@map("Product")
+}
+
+
+model Pedido {
+  id               String          @id @default(uuid())
+  usuarioId        String
+  usuario          Usuario         @relation(fields: [usuarioId], references: [id])
+  estado           EstadoPedido    @default(PENDIENTE)
+  total            Decimal
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  items            ItemPedido[]
+  envio            Envio?
+  direccionEnvio   DireccionEnvio?
+
+  @@map("Order")
+}
+
+model ItemPedido {
+  id         String   @id @default(uuid())
+  pedidoId   String
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  productoId String
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  precio     Decimal
+
+  @@map("OrderItem")
+}
+
+model Envio {
+  id                String       @id @default(uuid())
+  pedidoId          String       @unique
+  pedido            Pedido       @relation(fields: [pedidoId], references: [id])
+  direccion         String
+  estado            EstadoEnvio  @default(PREPARANDO)
+  fechaEstimadaEntrega DateTime?
+  numeroSeguimiento String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@map("Shipment")
+}
+
+model DireccionEnvio {
+  id           String      @id @default(uuid())
+  pedidoId     String      @unique
+  pedido       Pedido      @relation(fields: [pedidoId], references: [id])
+  calle        String
+  ciudad       String
+  estado       String
+  codigoPostal String
+  pais         String      @default("México")
+  metodoPago   MetodoPago
+  nombreTitular String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+enum Rol {
+  CLIENTE
+  ADMINISTRADOR
+
+  @@map("Role")
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  PAGADO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+
+  @@map("OrderStatus")
+}
+
+enum EstadoEnvio {
+  PREPARANDO
+  ENVIADO
+  ENTREGADO
+  DEVUELTO
+
+  @@map("ShipmentStatus")
+}
+
+enum MetodoPago {
+  TARJETA_CREDITO
+  TARJETA_DEBITO
+  PAYPAL
+}
+

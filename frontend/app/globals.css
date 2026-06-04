@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #5F4B8B;
+  /* Deep Purple */
+  --color-primary-foreground: #ffffff;
+  /* White */
+  --color-secondary: #F9FAFB;
+  /* Light Background */
+  --color-accent: #4D407A;
+  /* Darker Purple */
+  --color-background: #ffffff;
+  --color-foreground: #212121;
+  --font-sans: 'Montserrat', sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Utilities */
+.btn {
+  @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90 hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 text-gray-900 hover:bg-gray-200 hover:shadow-md transform hover:-translate-y-0.5;
+}
+
+.input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200;
+}
+
+.card-hover {
+  @apply transform hover:-translate-y-1 transition-all duration-200;
+}
+
+/* Animaciones para el modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
